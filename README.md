@@ -1,11 +1,6 @@
-Here's the **updated README.md** with **credits** included! 🎉  
+# Trans-Crab 🦀  
 
----
-
-### ✅ **README.md for Trans-Crab** 🦀  
-
-```markdown
-# 🦀 Trans-Crab - Google Meet Transcriber  
+Google Meet Transcriber  
 
 **Trans-Crab** is a Chrome extension that automatically transcribes **Google Meet** calls and saves the text as a `.txt` file. It provides **real-time Hebrew transcription**, an easy-to-use interface, and a timer to track your recording duration.  
 
@@ -23,7 +18,7 @@ Here's the **updated README.md** with **credits** included! 🎉
 ### **🔧 Load the Extension in Chrome**  
 1. **Download the repository**  
    ```bash
-   git clone https://github.com/YOUR_USERNAME/trans-crab.git
+   git clone <this_repo>
    cd trans-crab
    ```
 2. **Open Chrome Extensions Page**  
@@ -51,23 +46,12 @@ Here's the **updated README.md** with **credits** included! 🎉
 
 ## ⚙️ Technical Details  
 
-- **Language:** `he-IL` (Hebrew)  
+- **Language:** `he-IL` (Hebrew) & 'en-US' (English)
 - **Speech Recognition API** is used for transcription  
 - **Manifest V3** extension format  
 - **Works only on Google Meet (`meet.google.com`)**  
 
 ---
-
-## 🛠 Development & Contribution  
-
-### 🔨 **Run the Extension Locally**  
-1. Clone the repo  
-   ```bash
-   git clone https://github.com/YOUR_USERNAME/trans-crab.git
-   cd trans-crab
-   ```
-2. Load it in Chrome as described in **Installation**.  
-3. Make changes, then reload the extension in `chrome://extensions/`.  
 
 ### 🏗 **Project Structure**  
 ```bash
@@ -93,6 +77,13 @@ Trans-Crab was built to **simplify Google Meet transcriptions** with an **intuit
 
 If you found this useful, **⭐ Star the repo** and **spread the word**! 🚀  
 
+## Future features: 
+* Fine-tuned transcription model
+* Meeting summary with action items
+* CRM integration
+* Web interface
+* anything our users asks for (:
+  
 ---
 
 ## 📜 License  
@@ -103,22 +94,9 @@ MIT License – You can use and modify this freely.
 
 ## 🎉 Credits  
 
-Made with ❤️ by **[@your-username](https://github.com/YOUR_USERNAME)** and the **Crab Devs Community**.  
+Made with ❤️ by **[@MichaelYarshansky]** and the **Crab Devs Community**.  
 🔥 Inspired by the need for simple, efficient meeting transcriptions!  
 
 ---
 
 ### 🎉 **Enjoy Trans-Crab! 🦀🎙️**  
-```
-
----
-
-### **🔥 What This README Covers**
-✅ **What Trans-Crab does**  
-✅ **Installation & usage**  
-✅ **How to contribute**  
-✅ **Technical details**  
-✅ **Credits to you & the Crab Devs Community!**  
-
-🚀 **Copy-paste this into `README.md` in your repo and push it!**  
-Let me know if you want any more tweaks! 🔥🔥🔥

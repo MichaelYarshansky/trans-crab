@@ -1,0 +1,38 @@
+{
+  "manifest_version": 3,
+  "name": "Trans-Crab 🦀",
+  "version": "1.0",
+  "description": "Transcribe Google Meet calls and save the text as a file.",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "scripting",
+    "downloads"
+  ],
+  "host_permissions": [
+    "https://meet.google.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://meet.google.com/*"],
+      "js": ["content.js"]
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "crab-icon16.png",
+      "48": "crab-icon16.png",
+      "128": "crab-icon16.png"
+    }
+  },
+  "icons": {
+    "16": "crab-icon16.png",
+    "32": "crab-icon16.png",
+    "48": "crab-icon16.png",
+    "128": "crab-icon16.png"
+  }
+}

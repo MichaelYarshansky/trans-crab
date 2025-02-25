@@ -1,66 +1,74 @@
 /**
- * Content Script for Trans-Crab.
+ * content.js
  *
- * This script manages speech transcription for supported meeting sites
- * (Google Meet and Zoom). It listens for commands from the extension popup
- * to start or stop transcription and triggers the transcript download via messaging
- * with the background script.
- *
- * Automatic meeting-end detection is not implemented in this version.
+ * This version stores both final results and the most recent interim result.
+ * If the API never finalizes some speech, we still save that interim text
+ * instead of losing it.
  */
 
 "use strict";
 
-console.debug("🔵 [content.js] Trans-Crab content script loaded and ready.");
+console.debug("🔵 [content.js] Trans-Crab content script with interim-capture ready.");
 
 let recognition = null;
 let isTranscribing = false;
-// Instead of a single string, we store transcript chunks in an array.
+
+// Stores all finalized chunks (with timestamps)
 let transcriptChunks = [];
-const STOP_DELAY_MS = 5000; // Increased delay (in ms) before sending the final transcript after stop
+
+// Stores the latest interim text in case it never becomes final
+let currentInterim = "";
+
+// Delay (ms) before sending final transcript after stop
+const STOP_DELAY_MS = 5000;
 
 /**
- * Initializes and starts the SpeechRecognition API.
+ * Start the transcription process.
  */
 function startTranscription() {
   if (isTranscribing) {
-    console.debug("🚫 [content.js] Transcription already in progress; ignoring start command.");
+    console.debug("🚫 [content.js] Already transcribing; ignoring start request.");
     return;
   }
-  
-  // Verify SpeechRecognition API support
+
   if (!("SpeechRecognition" in window) && !("webkitSpeechRecognition" in window)) {
     console.error("🚫 [content.js] Speech recognition is not supported in this browser.");
     return;
   }
-  
+
   isTranscribing = true;
-  transcriptChunks = []; // Reset transcript chunks
-  
+  transcriptChunks = [];
+  currentInterim = "";
+  console.debug("🎤 [content.js] Starting transcription session...");
+
   try {
     recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
   } catch (err) {
     console.error("❌ [content.js] Failed to initialize SpeechRecognition:", err);
     return;
   }
-  
-  // Configure the SpeechRecognition instance
+
   recognition.continuous = true;
   recognition.interimResults = true;
-  recognition.lang = "he-IL"; // Default to Hebrew
-  
+  recognition.lang = "he-IL"; // Hebrew
+
   recognition.onresult = (event) => {
-    let finalChunk = "";
+    // For each result (interim or final)
     for (let i = event.resultIndex; i < event.results.length; i++) {
-      if (event.results[i].isFinal) {
-        finalChunk += event.results[i][0].transcript + " ";
+      const result = event.results[i];
+      const text = result[0].transcript.trim();
+
+      if (result.isFinal) {
+        // If final, push to transcriptChunks and clear currentInterim
+        const timestamp = new Date().toLocaleTimeString();
+        transcriptChunks.push(`[${timestamp}] ${text}`);
+        console.debug(`✅ [content.js] Final result: "${text}" (stored as chunk)`);
+        currentInterim = ""; // Clear interim buffer
+      } else {
+        // If interim, store in currentInterim
+        currentInterim = text;
+        console.debug(`✏️ [content.js] Interim result: "${text}"`);
       }
-    }
-    if (finalChunk.trim()) {
-      // Prepend a timestamp for the chunk
-      let timestamp = new Date().toLocaleTimeString();
-      transcriptChunks.push(`[${timestamp}] ${finalChunk.trim()}`);
-      console.debug("📝 [content.js] New transcript chunk:", finalChunk.trim());
     }
   };
 
@@ -70,9 +78,9 @@ function startTranscription() {
 
   recognition.onend = () => {
     console.warn("⚠️ [content.js] Speech recognition ended.");
-    // Restart automatically if still transcribing
+    // Auto-restart if user is still transcribing
     if (isTranscribing) {
-      console.debug("🔄 [content.js] Restarting speech recognition.");
+      console.debug("🔄 [content.js] Restarting after onend...");
       try {
         recognition.start();
       } catch (err) {
@@ -83,15 +91,14 @@ function startTranscription() {
 
   try {
     recognition.start();
-    console.debug("🚀 [content.js] Speech recognition started.");
+    console.debug(`🚀 [content.js] Speech recognition started (lang="${recognition.lang}").`);
   } catch (err) {
     console.error("❌ [content.js] Failed to start SpeechRecognition:", err);
   }
 }
 
 /**
- * Stops the transcription process and, after a short delay,
- * sends the final transcript (with chunk separation) to the background script.
+ * Stop the transcription process.
  */
 function stopTranscription() {
   if (!isTranscribing) {
@@ -99,29 +106,53 @@ function stopTranscription() {
     return;
   }
   isTranscribing = false;
-  console.debug("🛑 [content.js] Stopping speech recognition.");
+  console.debug("🛑 [content.js] Stopping transcription session...");
+
   try {
     recognition.stop();
   } catch (err) {
     console.error("❌ [content.js] Error stopping SpeechRecognition:", err);
   }
-  // Delay increased to capture any final words before sending transcript
+
+  // After a short delay, finalize the transcript
   setTimeout(() => {
-    let transcriptText = transcriptChunks.join("\n\n");
-    console.debug("📤 [content.js] Sending final transcript:\n", transcriptText);
-    sendTranscriptToBackground(transcriptText);
+    finalizeTranscript();
   }, STOP_DELAY_MS);
 }
 
 /**
- * Sends the transcript to the background script for file download.
- * @param {string} transcriptText - The complete transcript text with chunks.
+ * Finalize and send the transcript, including any leftover interim text.
+ */
+function finalizeTranscript() {
+  // If there's leftover interim text, store it as a chunk
+  if (currentInterim.trim()) {
+    const timestamp = new Date().toLocaleTimeString();
+    transcriptChunks.push(`[${timestamp}] ${currentInterim}`);
+    console.debug(`🔎 [content.js] Capturing leftover interim text: "${currentInterim}"`);
+    currentInterim = "";
+  }
+
+  // Join all chunks
+  const transcriptText = transcriptChunks.join("\n\n");
+  console.debug("📤 [content.js] Final transcript ready:\n", transcriptText);
+
+  // Send to background
+  sendTranscriptToBackground(transcriptText);
+
+  // Clear arrays
+  transcriptChunks = [];
+  currentInterim = "";
+}
+
+/**
+ * Sends the transcript to background.js for file download.
  */
 function sendTranscriptToBackground(transcriptText) {
   if (!transcriptText.trim()) {
-    console.warn("⚠️ [content.js] Transcript is empty; no file will be downloaded.");
+    console.warn("⚠️ [content.js] Transcript is empty => skipping download.");
     return;
   }
+  console.debug("📨 [content.js] Sending transcript to background for download...");
   chrome.runtime.sendMessage({ action: "download_transcript", transcript: transcriptText }, (response) => {
     if (chrome.runtime.lastError) {
       console.error("❌ [content.js] Failed to send transcript:", chrome.runtime.lastError);
@@ -129,15 +160,13 @@ function sendTranscriptToBackground(transcriptText) {
       console.debug("✅ [content.js] Transcript sent to background successfully.");
     }
   });
-  transcriptChunks = []; // Reset transcript chunks
 }
 
 /**
- * Creates and triggers the download of the transcript file.
- * @param {string} text - The transcript text.
+ * Creates and triggers the download of the transcript file (called by background.js).
  */
 function createTranscriptFile(text) {
-  console.debug("📂 [content.js] Creating transcript file for download.");
+  console.debug("📂 [content.js] Creating transcript file for download...");
   const blob = new Blob([text], { type: "text/plain" });
   const url = window.URL.createObjectURL(blob);
   const a = document.createElement("a");
@@ -151,18 +180,18 @@ function createTranscriptFile(text) {
 }
 
 /**
- * Listens for messages from the popup and delegates actions.
+ * Listen for messages from popup.js.
  */
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   console.debug("📬 [content.js] Received message:", message);
   switch (message.action) {
     case "start_transcription":
-      console.debug("🎤 [content.js] Start command received.");
+      console.debug("🎤 [content.js] 'start_transcription' command received.");
       startTranscription();
       sendResponse({ status: "Started" });
       break;
     case "stop_transcription":
-      console.debug("🛑 [content.js] Stop command received.");
+      console.debug("🛑 [content.js] 'stop_transcription' command received.");
       stopTranscription();
       sendResponse({ status: "Stopped" });
       break;

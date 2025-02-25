@@ -1,14 +1,13 @@
 /**
  * content.js
  *
- * This version stores both final results and the most recent interim result.
- * If the API never finalizes some speech, we still save that interim text
- * instead of losing it.
+ * Improved version that properly captures all interim results 
+ * and ensures they make it to the final transcript.
  */
 
 "use strict";
 
-console.debug("🔵 [content.js] Trans-Crab content script with interim-capture ready.");
+console.debug("🔵 [content.js] Trans-Crab content script with improved interim-capture ready.");
 
 let recognition = null;
 let isTranscribing = false;
@@ -16,8 +15,12 @@ let isTranscribing = false;
 // Stores all finalized chunks (with timestamps)
 let transcriptChunks = [];
 
-// Stores the latest interim text in case it never becomes final
-let currentInterim = "";
+// Stores all interim results by resultIndex
+let interimResults = {};
+
+// Track when we last saved an interim result
+let lastInterimSaveTime = 0;
+const INTERIM_SAVE_INTERVAL = 3000; // Save interim results every 3 seconds
 
 // Delay (ms) before sending final transcript after stop
 const STOP_DELAY_MS = 5000;
@@ -38,7 +41,8 @@ function startTranscription() {
 
   isTranscribing = true;
   transcriptChunks = [];
-  currentInterim = "";
+  interimResults = {};
+  lastInterimSaveTime = Date.now();
   console.debug("🎤 [content.js] Starting transcription session...");
 
   try {
@@ -53,31 +57,49 @@ function startTranscription() {
   recognition.lang = "he-IL"; // Hebrew
 
   recognition.onresult = (event) => {
-    // For each result (interim or final)
+    const now = Date.now();
+    let hasNewInterim = false;
+
+    // Process each result
     for (let i = event.resultIndex; i < event.results.length; i++) {
       const result = event.results[i];
       const text = result[0].transcript.trim();
 
       if (result.isFinal) {
-        // If final, push to transcriptChunks and clear currentInterim
+        // If final, push to transcriptChunks
         const timestamp = new Date().toLocaleTimeString();
         transcriptChunks.push(`[${timestamp}] ${text}`);
         console.debug(`✅ [content.js] Final result: "${text}" (stored as chunk)`);
-        currentInterim = ""; // Clear interim buffer
+        
+        // Remove this index from interim results since it's now final
+        delete interimResults[i];
       } else {
-        // If interim, store in currentInterim
-        currentInterim = text;
-        console.debug(`✏️ [content.js] Interim result: "${text}"`);
+        // Store interim result by its index
+        interimResults[i] = text;
+        hasNewInterim = true;
+        console.debug(`✏️ [content.js] Interim result at index ${i}: "${text}"`);
       }
+    }
+
+    // Periodically save interim results that haven't become final
+    if (hasNewInterim && (now - lastInterimSaveTime) > INTERIM_SAVE_INTERVAL) {
+      saveCurrentInterimResults();
+      lastInterimSaveTime = now;
     }
   };
 
   recognition.onerror = (event) => {
     console.error("❌ [content.js] Speech recognition error:", event.error);
+    // Save any interim results when an error occurs
+    saveCurrentInterimResults();
   };
 
   recognition.onend = () => {
     console.warn("⚠️ [content.js] Speech recognition ended.");
+    
+    // Save any pending interim results when recognition ends
+    saveCurrentInterimResults();
+    
     // Auto-restart if user is still transcribing
     if (isTranscribing) {
       console.debug("🔄 [content.js] Restarting after onend...");
@@ -98,6 +120,23 @@ function startTranscription() {
 }
 
 /**
+ * Save any current interim results to the transcript chunks.
+ * This ensures we don't lose interim speech that never becomes final.
+ */
+function saveCurrentInterimResults() {
+  if (Object.keys(interimResults).length === 0) return;
+  
+  // Combine all current interim results
+  const combinedInterim = Object.values(interimResults).join(" ");
+  
+  if (combinedInterim.trim()) {
+    const timestamp = new Date().toLocaleTimeString();
+    transcriptChunks.push(`[${timestamp}] ${combinedInterim} [interim]`);
+    console.debug(`🔄 [content.js] Saved interim results: "${combinedInterim}"`);
+  }
+}
+
+/**
  * Stop the transcription process.
  */
 function stopTranscription() {
@@ -107,6 +146,9 @@ function stopTranscription() {
   }
   isTranscribing = false;
   console.debug("🛑 [content.js] Stopping transcription session...");
+
+  // Save any pending interim results immediately
+  saveCurrentInterimResults();
 
   try {
     recognition.stop();
@@ -121,16 +163,11 @@ function stopTranscription() {
 }
 
 /**
- * Finalize and send the transcript, including any leftover interim text.
+ * Finalize and send the transcript.
  */
 function finalizeTranscript() {
-  // If there's leftover interim text, store it as a chunk
-  if (currentInterim.trim()) {
-    const timestamp = new Date().toLocaleTimeString();
-    transcriptChunks.push(`[${timestamp}] ${currentInterim}`);
-    console.debug(`🔎 [content.js] Capturing leftover interim text: "${currentInterim}"`);
-    currentInterim = "";
-  }
+  // Save any remaining interim results one last time
+  saveCurrentInterimResults();
 
   // Join all chunks
   const transcriptText = transcriptChunks.join("\n\n");
@@ -141,7 +178,7 @@ function finalizeTranscript() {
 
   // Clear arrays
   transcriptChunks = [];
-  currentInterim = "";
+  interimResults = {};
 }
 
 /**

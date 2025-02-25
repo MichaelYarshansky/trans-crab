@@ -1,58 +1,70 @@
+/* styles.css */
+/* Enhanced styling for the Trans-Crab popup UI with a fun, modern font and rounded popup */
+
 body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-    background: #f4f4f9;
-    color: #333;
-    padding: 15px;
-    border-radius: 10px;
-    width: 250px;
-    min-height: 140px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  font-family: 'Poppins', sans-serif;
+  text-align: center;
+  background: #FBE8D3; /* Very light orange-brown background */
+  color: #333;
+  margin: 0; /* Remove default margins */
+  padding: 0; /* Remove default padding */
+  border-radius: 20px; /* Rounded popup */
+  width: 270px;
+  min-height: 90px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden; /* Ensures popup's rounded corners are visible */
 }
 
 .popup-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* background-color: rgba(255, 255, 255, 0.9);  Removed this line to match the outer background */
+  padding: 10px;
 }
 
 h2 {
-    font-size: 16px;
-    font-weight: bold;
-    margin: 8px 0;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 8px 0;
 }
 
 .crab-icon {
-    width: 50px;
-    height: 50px;
-    margin-bottom: 5px;
+  width: 50px;
+  height: 50px;
+  margin-bottom: 5px;
+  border-radius: 8px; /* Rounded edges for the logo */
 }
 
 #transcribe-btn {
-    width: 90%;
-    padding: 8px;
-    font-size: 14px;
-    font-weight: bold;
-    border: none;
-    cursor: pointer;
-    border-radius: 6px;
-    transition: 0.3s ease-in-out;
-    background-color: #4CAF50;
-    color: white;
+  width: 90%;
+  padding: 8px;
+  font-size: 14px;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background-color 0.3s ease-in-out;
+  background-color: #4caf50;
+  color: white;
 }
 
 #transcribe-btn.transcribing {
-    background-color: #E53935;
+  background-color: #e53935;
+}
+
+#transcribe-btn.disabled {
+  background-color: #808080;
+  color: #ccc;
+  cursor: not-allowed;
 }
 
 #status {
-    font-size: 12px;
-    font-weight: normal;
-    margin-top: 6px;
-    color: #555;
-    background: #eee;
-    padding: 4px 8px;
-    border-radius: 4px;
+  font-size: 12px;
+  margin-top: 6px;
+  color: #555;
+  background: #eee;
+  padding: 4px 8px;
+  border-radius: 4px;
 }
-

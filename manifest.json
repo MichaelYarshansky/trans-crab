@@ -1,23 +1,28 @@
 {
   "manifest_version": 3,
   "name": "Trans-Crab 🦀",
-  "version": "1.0",
+  "version": "1.3",
   "description": "Transcribe Google Meet calls and save the text as a file.",
   "permissions": [
     "activeTab",
     "storage",
     "scripting",
-    "downloads"
+    "downloads",
+    "webRequest"
   ],
   "host_permissions": [
-    "https://meet.google.com/*"
+    "https://meet.google.com/*",
+    "https://*.zoom.us/*"
   ],
   "background": {
     "service_worker": "background.js"
   },
   "content_scripts": [
     {
-      "matches": ["https://meet.google.com/*"],
+      "matches": [
+        "https://meet.google.com/*",
+        "https://*.zoom.us/*"
+      ],
       "js": ["content.js"]
     }
   ],

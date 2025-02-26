@@ -1,0 +1,17 @@
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background-color: #FBE8D3; /* Light orange-brown background */
+  color: #333;
+}
+
+.app-container {
+  padding: 20px;
+  text-align: center;
+}
+
+.meetings-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}

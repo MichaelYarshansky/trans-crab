@@ -17,8 +17,8 @@ export class MessageHandler {
                     break;
                     
                 case "stop_transcription":
-                    this.handleStopTranscription(sendResponse);
-                    break;
+                    this.forceStopTranscription(sendResponse);
+                    return true; // Keep the message channel open for async response
                     
                 case "ping":
                     sendResponse({ status: "available" });
@@ -30,24 +30,19 @@ export class MessageHandler {
         });
     }
 
-    async handleStopTranscription(sendResponse) {
-        console.debug("🛑 Handling stop transcription request...");
-        
-        // Stop the transcription
-        this.transcriptionService.stop();
-
-        // Get the final transcript
-        const transcript = this.transcriptionService.transcriptManager.getTranscript();
-        console.debug("📝 Final transcript ready for upload");
-
+    async forceStopTranscription(sendResponse) {
         try {
-            // Send to backend
+            console.debug("🛑 Force stopping transcription...");
+            await this.transcriptionService.forceStop();
+            
+            const transcript = this.transcriptionService.transcriptManager.getTranscript();
             await BackendService.sendTranscript(transcript);
-            console.debug("✅ Transcript successfully uploaded to server");
-            sendResponse({ status: "Stopped and uploaded" });
+            
+            console.debug("✅ Transcription stopped and uploaded successfully");
+            sendResponse({ status: "Stopped", success: true });
         } catch (error) {
-            console.error("❌ Failed to upload transcript:", error);
-            sendResponse({ status: "Stopped but upload failed", error: error.message });
+            console.error("❌ Error during stop process:", error);
+            sendResponse({ status: "Error", success: false, error: error.message });
         }
     }
 }

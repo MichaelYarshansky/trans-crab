@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "mongoose": "^8.10.2"
+    "mongoose": "^8.10.2",
+    "react-calendar": "^5.1.0"
   }
 }

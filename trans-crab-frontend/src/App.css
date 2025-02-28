@@ -36,3 +36,42 @@
     transform: rotate(360deg);
   }
 }
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding: 20px;
+}
+
+.app-header {
+  background-color: white;
+  padding: 20px 0;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.app-header h1 {
+  margin: 0;
+  color: #2c3e50;
+}
+
+.meetings-grid {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 20px;
+  max-height: calc(100vh - 120px);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 400px;
+  margin-left: auto; /* This will push the container to the right */
+}
+
+.subtitle {
+  color: #666;
+  margin: 8px 0 0;
+  text-align: center;
+}
+
+/* Remove the old App-specific styles that aren't needed */

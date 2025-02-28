@@ -1,0 +1,84 @@
+.meeting-card {
+  background: white;
+  border-radius: 16px;
+  padding: 16px 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  max-width: 400px;
+  margin: 8px;
+  text-align: left;
+}
+
+.meeting-info {
+  flex: 1;
+  text-align: left;
+}
+
+.meeting-title {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 1.1em;
+  font-weight: 500;
+  text-align: left;
+}
+
+.meeting-time {
+  color: #666;
+  font-size: 0.8em;
+  margin: 4px 0 8px;
+  font-weight: 400;
+  text-align: left;
+}
+
+.meeting-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.meeting-info {
+  flex: 1;
+}
+
+.meeting-title {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 1.1em;
+  font-weight: 500;
+}
+
+.meeting-time {
+  color: #666;
+  font-size: 0.8em;
+  margin: 4px 0 8px;
+  font-weight: 400;
+}
+
+.participants-info {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.85em;
+  color: #666;
+}
+
+.participants-icon {
+  font-size: 0.9em;
+  opacity: 0.8;
+}
+
+.participants-count {
+  font-size: 0.85em;
+}
+
+.status-badge {
+  background: #1a1a1a;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75em;
+  font-weight: 500;
+}

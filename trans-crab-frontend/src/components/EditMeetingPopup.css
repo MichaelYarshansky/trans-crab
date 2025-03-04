@@ -1,0 +1,270 @@
+.edit-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.edit-popup {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: popup-appear 0.3s ease-out;
+}
+
+@keyframes popup-appear {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.edit-popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.edit-popup-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #333;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #666;
+  padding: 5px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+}
+
+.close-btn:hover {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+form {
+  padding: 24px;
+}
+
+.form-group {
+  margin-bottom: 24px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #333;
+}
+
+.form-control {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+  direction: rtl; /* Make input fields right-to-left */
+  text-align: right;
+}
+
+/* Add specific styling for the meeting name input */
+#meetingName {
+  width: 80%;
+  margin: 0 auto;
+  display: block;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #0066cc;
+  box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.2);
+}
+
+.participants-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 16px 0;
+  max-height: 200px;
+  overflow-y: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  border: none;
+  justify-content: flex-end; /* Align pills to the right */
+}
+
+.participant-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 12px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  background-color: #f8f8f8;
+  margin-bottom: 8px;
+  animation: tag-appear 0.3s ease-out;
+}
+
+@keyframes tag-appear {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.remove-participant {
+  background: none;
+  border: none;
+  color: #ff3b30;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 0 0 0 8px;
+  margin-left: 8px;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.remove-participant:hover {
+  opacity: 1;
+}
+
+.add-participant {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.add-participant input {
+  flex-grow: 1;
+  border-radius: 20px;
+  padding: 10px 16px;
+  border: 1px solid #ddd;
+  background-color: #f8f8f8;
+  transition: all 0.2s ease;
+}
+
+.add-participant input:focus {
+  outline: none;
+  border-color: #0066cc;
+  box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.1);
+  background-color: #fff;
+}
+
+.add-participant-btn {
+  background-color: #0066cc;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.add-participant-btn:hover:not(:disabled) {
+  background-color: #0055aa;
+  transform: scale(1.05);
+}
+
+.add-participant-btn:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.popup-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.cancel-btn {
+  padding: 10px 20px;
+  background-color: transparent;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  color: #333;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.cancel-btn:hover:not(:disabled) {
+  background-color: #f0f0f0;
+}
+
+.save-btn {
+  padding: 10px 20px;
+  background-color: #0066cc;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.save-btn:hover:not(:disabled) {
+  background-color: #0055aa;
+}
+
+.save-btn:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.saving-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.saving-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

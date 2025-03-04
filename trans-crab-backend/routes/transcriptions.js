@@ -55,4 +55,40 @@ router.get('/', async (req, res) => {
   }
 });
 
+/**
+ * PATCH /api/transcriptions/:id
+ * Updates a meeting with new information
+ */
+router.patch('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { meetingName, participants } = req.body;
+    
+    console.log(`[transcriptions.js] Updating meeting ${id} with:`, req.body);
+    
+    // Find and update the meeting
+    const updatedMeeting = await Meeting.findByIdAndUpdate(
+      id,
+      { 
+        meetingName, 
+        participants,
+        // Update the timestamp
+        updatedAt: new Date()
+      },
+      { new: true } // Return the updated document
+    );
+    
+    if (!updatedMeeting) {
+      console.log(`[transcriptions.js] Meeting not found with ID: ${id}`);
+      return res.status(404).json({ error: 'Meeting not found' });
+    }
+    
+    console.log(`[transcriptions.js] Meeting updated successfully: ${updatedMeeting._id}`);
+    res.status(200).json(updatedMeeting);
+  } catch (error) {
+    console.error(`[transcriptions.js] Error updating meeting: ${error}`);
+    res.status(500).json({ error: 'Failed to update meeting', details: error.message });
+  }
+});
+
 module.exports = router;

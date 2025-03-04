@@ -16,7 +16,7 @@ function MeetingCard({ meeting, onCardClick }) {
   };
 
   return (
-    <div className="meeting-card" onClick={() => onCardClick && onCardClick(meeting)}>
+    <div className="meeting-card" onClick={() => onCardClick(meeting)}>
       <div className="meeting-info">
         <h3 className="meeting-title">{meetingName}</h3>
         <p className="meeting-time">{formatDateTime(meetingDateTime)}</p>
@@ -25,7 +25,6 @@ function MeetingCard({ meeting, onCardClick }) {
           <span className="participants-count">{participants.length}</span>
         </div>
       </div>
-      <span className="status-badge">Upcoming</span>
     </div>
   );
 }

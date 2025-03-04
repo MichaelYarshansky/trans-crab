@@ -33,12 +33,34 @@ export class MessageHandler {
     async forceStopTranscription(sendResponse) {
         try {
             console.debug("🛑 Force stopping transcription...");
+            
+            // Store a reference to the transcript manager before stopping
+            const transcriptManager = this.transcriptionService.transcriptController || 
+                                     this.transcriptionService.transcriptManager;
+            
+            // Stop the service
             await this.transcriptionService.forceStop();
             
-            const transcript = this.transcriptionService.transcriptManager.getTranscript();
-            await BackendService.sendTranscript(transcript);
+            // Try to get the transcript using the stored reference
+            let transcript = "No transcript available";
+            if (transcriptManager) {
+                if (typeof transcriptManager.getTranscript === 'function') {
+                    transcript = transcriptManager.getTranscript();
+                    console.debug("📝 Retrieved transcript successfully");
+                } else {
+                    console.warn("⚠️ getTranscript method not available");
+                }
+                
+                // Try to send the transcript to the backend
+                try {
+                    await BackendService.sendTranscript(transcript);
+                    console.debug("🚀 Transcript uploaded successfully");
+                } catch (uploadError) {
+                    console.error("❌ Error uploading transcript:", uploadError);
+                }
+            }
             
-            console.debug("✅ Transcription stopped and uploaded successfully");
+            console.debug("✅ Transcription stopped successfully");
             sendResponse({ status: "Stopped", success: true });
         } catch (error) {
             console.error("❌ Error during stop process:", error);

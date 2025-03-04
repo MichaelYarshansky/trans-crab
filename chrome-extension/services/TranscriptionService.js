@@ -1,10 +1,14 @@
 export class TranscriptionService {
-    constructor(transcriptManager) {
+    constructor(transcriptController) {
         this.recognition = null;
         this.isTranscribing = false;
-        this.transcriptManager = transcriptManager;
+        this.transcriptController = transcriptController;
     }
 
+    /**
+     * Starts the transcription process if not already active.
+     * Initializes the speech recognition service and resets the transcript controller.
+     */
     start() {
         if (this.isTranscribing) {
             console.debug("🚫 Already transcribing; ignoring start request.");
@@ -17,7 +21,7 @@ export class TranscriptionService {
         }
 
         this.isTranscribing = true;
-        this.transcriptManager.reset();
+        this.transcriptController.reset();
         console.debug("🎤 Starting transcription session...");
 
         try {
@@ -27,6 +31,10 @@ export class TranscriptionService {
         }
     }
 
+    /**
+     * Initializes the speech recognition object and sets up event handlers.
+     * Starts the recognition process.
+     */
     initializeRecognition() {
         this.recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
         this.recognition.continuous = true;
@@ -44,17 +52,28 @@ export class TranscriptionService {
         }
     }
 
+    /**
+     * Sets up event handlers for the speech recognition object.
+     */
     setupRecognitionHandlers() {
         this.recognition.onresult = (event) => this.handleRecognitionResult(event);
         this.recognition.onerror = (event) => this.handleRecognitionError(event);
         this.recognition.onend = () => this.handleRecognitionEnd();
     }
 
+    /**
+     * Handles the result event from the speech recognition.
+     * Processes the recognition result using the transcript controller.
+     */
     handleRecognitionResult(event) {
-        // console.debug(`🎯 Recognition event received with ${event.results} results`);
-        this.transcriptManager.processRecognitionResult(event);
+        console.debug(`%c🎯 Recognition event received with ${event.results} results`, 'color: #ff6b6b');
+        this.transcriptController.processRecognitionResult(event);
     }
 
+    /**
+     * Stops the transcription process if active.
+     * Saves any remaining interim results and resolves when recognition is fully stopped.
+     */
     async stop() {
         if (!this.isTranscribing) {
             console.debug("🚫 No active transcription to stop.");
@@ -65,7 +84,7 @@ export class TranscriptionService {
         this.isTranscribing = false;  // Set this before stopping to prevent auto-restart
         
         // Save any remaining interim results
-        this.transcriptManager.saveInterimResults();
+        this.transcriptController.saveInterimResults();
 
         return new Promise((resolve, reject) => {
             try {
@@ -88,6 +107,10 @@ export class TranscriptionService {
         });
     }
 
+    /**
+     * Forcefully stops the transcription service and cleans up resources.
+     * Ensures all event listeners are removed and interim results are saved.
+     */
     async forceStop() {
         console.debug("🛑 Force stopping transcription service...");
         
@@ -113,13 +136,17 @@ export class TranscriptionService {
         }
         
         // Save any remaining interim results
-        this.transcriptManager.saveInterimResults();
+        this.transcriptController.saveInterimResults();
         console.debug("📝 Final results saved");
     }
 
+    /**
+     * Handles the end event of the speech recognition.
+     * Saves interim results and optionally restarts recognition if still transcribing.
+     */
     handleRecognitionEnd() {
         console.warn("🔒 Speech recognition ended.");
-        this.transcriptManager.saveInterimResults();
+        this.transcriptController.saveInterimResults();
         
         // Only restart if explicitly transcribing and recognition exists
         if (this.isTranscribing && this.recognition) {
@@ -128,5 +155,31 @@ export class TranscriptionService {
         } else {
             console.debug("🛑 No auto-restart: transcribing=", this.isTranscribing);
         }
+    }
+
+    /**
+     * Restarts the speech recognition service after it has ended.
+     * Used to maintain continuous transcription.
+     */
+    restartRecognition() {
+        console.debug("🔄 Restarting speech recognition...");
+        
+        if (this.recognition) {
+            // Clean up existing recognition instance
+            this.recognition.onresult = null;
+            this.recognition.onerror = null;
+            this.recognition.onend = null;
+            this.recognition = null;
+        }
+        
+        // Short delay before restarting to avoid potential issues
+        setTimeout(() => {
+            try {
+                this.initializeRecognition();
+            } catch (err) {
+                console.error("❌ Failed to restart recognition:", err);
+                this.isTranscribing = false;
+            }
+        }, 300);
     }
 }

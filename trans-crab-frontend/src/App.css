@@ -1,77 +1,405 @@
-.App {
-  text-align: center;
+/* Google-inspired modern design */
+:root {
+  --primary-color: #4285f4;
+  --secondary-color: #34a853;
+  --accent-color: #ea4335;
+  --text-color: #202124;
+  --text-secondary: #5f6368;
+  --background-color: #f8f9fa;
+  --card-background: #ffffff;
+  --border-radius: 8px;
+  --shadow-small: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.08);
+  --shadow-medium: 0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
+  --shadow-large: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+  --transition: all 0.2s ease;
+  --font-family: 'Google Sans', 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  font-family: var(--font-family);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+/* Top task bar */
+:root {
+  --primary-color: #e57373; /* Changed to a crab-like red color */
+  --secondary-color: #34a853;
+  --accent-color: #ff5252;
+  --text-color: #202124;
+  --text-secondary: #5f6368;
+  --background-color: #f8f9fa;
+  --card-background: #ffffff;
+  --border-radius: 8px;
+  --shadow-small: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.08);
+  --shadow-medium: 0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
+  --shadow-large: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+  --transition: all 0.2s ease;
+  --font-family: 'Google Sans', 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.task-bar {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  background-color: white;
+  box-shadow: var(--shadow-small);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: 48px;
+}
+
+.task-bar-left {
+  display: flex;
+  align-items: center;
+}
+
+.task-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  margin-right: 24px;
+}
+
+.logo {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: var(--text-color);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+
+.logo .accent {
+  color: var(--primary-color);
+}
+
+.logo .emoji {
+  margin-left: 6px;
+  font-size: 1.3rem;
+}
+
+.task-bar-button {
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: var(--transition);
+  padding: 0;
 }
 
-.App-link {
-  color: #61dafb;
+.task-bar-button:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  box-shadow: none;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.task-bar-button svg {
+  width: 20px;
+  height: 20px;
 }
 
 .app-container {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
+  max-width: 1200px;
+  margin: 0 auto;
   padding: 20px;
 }
 
 .app-header {
-  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 40px;
   padding: 20px 0;
-  margin-bottom: 20px;
-  text-align: center;
+  position: relative;
 }
 
 .app-header h1 {
+  font-size: 2.5rem;
+  font-weight: 400;
+  color: var(--text-color);
+  letter-spacing: -0.5px;
   margin: 0;
-  color: #2c3e50;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.crab-emoji {
+  margin-left: 12px;
+  font-size: 2rem;
+}
+
+.accent {
+  color: var(--primary-color);
+  font-weight: 500;
+}
+
+.subtitle-inline {
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--text-secondary);
+  margin-left: 12px;
+  vertical-align: middle;
 }
 
 .meetings-grid {
-  flex: 1;
-  overflow-y: auto;
-  padding-right: 20px;
-  max-height: calc(100vh - 120px);
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+  margin-top: 30px;
+}
+
+.loading-container {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  width: 400px;
-  margin-left: auto; /* This will push the container to the right */
+  align-items: center;
+  justify-content: center;
+  height: 200px;
 }
 
-.subtitle {
-  color: #666;
-  margin: 8px 0 0;
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(66, 133, 244, 0.2);
+  border-radius: 50%;
+  border-top-color: var(--primary-color);
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.error {
+  background-color: rgba(234, 67, 53, 0.1);
+  color: #d93025;
+  padding: 16px;
+  border-radius: var(--border-radius);
   text-align: center;
+  margin: 20px auto;
+  max-width: 500px;
 }
 
-/* Remove the old App-specific styles that aren't needed */
+/* Popup styles */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.popup-active .app-header,
+.popup-active .meetings-grid {
+  filter: blur(2px);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Button styles */
+button {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 4px;
+  font-family: var(--font-family);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+  outline: none;
+}
+
+button:hover {
+  background-color: #3367d6;
+  box-shadow: var(--shadow-small);
+}
+
+button.secondary {
+  background-color: transparent;
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
+}
+
+button.secondary:hover {
+  background-color: rgba(66, 133, 244, 0.04);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .meetings-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .app-header h1 {
+    font-size: 2rem;
+  }
+}
+
+/* Update task bar button styles to accommodate text */
+.task-bar-button.with-text {
+  display: flex;
+  align-items: center;
+  border-radius: 4px;
+  padding: 0 12px;
+  height: 36px;
+  width: auto;
+  gap: 8px;
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.task-bar-button.with-text:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.task-bar-button.with-text svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Settings popup styles */
+.settings-popup {
+  background: white;
+  border-radius: 8px;
+  box-shadow: var(--shadow-large);
+  width: 90%;
+  max-width: 600px;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+  animation: popup-fade-in 0.2s ease-out;
+}
+
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.popup-header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+.close-button {
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  line-height: 1;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.close-button:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  box-shadow: none;
+}
+
+.settings-content {
+  padding: 20px;
+}
+
+@keyframes popup-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Settings menu container */
+.settings-container {
+  position: relative;
+}
+
+/* Settings dropdown menu */
+.settings-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  border-radius: 8px;
+  box-shadow: var(--shadow-medium);
+  width: 200px;
+  z-index: 200;
+  margin-top: 8px;
+  overflow: hidden;
+  animation: menu-fade-in 0.15s ease-out;
+}
+
+.settings-menu-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 12px 16px;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  color: var(--text-color);
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.settings-menu-item:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  box-shadow: none;
+}
+
+.settings-menu-item:not(:last-child) {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+@keyframes menu-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

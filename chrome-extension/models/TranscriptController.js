@@ -1,6 +1,7 @@
 export class TranscriptController {
     constructor() {
         this.transcriptChunks = [];
+        this.finalTranscriptChunks = []; // New array to store only finalized chunks
         this.interimResults = {};
         this.finalResultIndices = new Set();
         this.lastInterimSaveTime = 0;
@@ -12,6 +13,7 @@ export class TranscriptController {
      */
     reset() {
         this.transcriptChunks = [];
+        this.finalTranscriptChunks = []; // Reset finalized chunks
         this.interimResults = {};
         this.finalResultIndices = new Set();
         this.lastInterimSaveTime = Date.now();
@@ -74,6 +76,8 @@ export class TranscriptController {
     addFinalResult(text) {
         const timestamp = new Date().toLocaleTimeString();
         this.transcriptChunks.push(`[${timestamp}] ${text}`);
+        // Also add to the finalized chunks array
+        this.finalTranscriptChunks.push(`[${timestamp}] ${text}`);
         console.debug(`✨ New transcribed text: "${text}"`);
     }
 
@@ -116,4 +120,52 @@ export class TranscriptController {
         this.saveInterimResults(true);
         return this.transcriptChunks.join("\n\n");
     }
+
+    /**
+     * Retrieves only the finalized transcript chunks without interim results.
+     * This helps prevent duplications in the final output.
+     * @returns {string} The transcript containing only finalized results.
+     */
+    getFinalizedTranscript() {
+        // Make sure to finalize any pending interim results before returning
+        this.finalizeInterimResults();
+        return this.finalTranscriptChunks.join("\n\n");
+    }
+
+    /**
+     * Converts any remaining interim results to final results
+     * This ensures the last words spoken are captured as final results
+     */
+    finalizeInterimResults() {
+        if (Object.keys(this.interimResults).length === 0) {
+            console.debug("🔍 No interim results to finalize");
+            return false;
+        }
+        
+        console.debug("🔄 Converting interim results to final results");
+        
+        // Group interim results by their base index to avoid duplicates
+        const groupedResults = {};
+        
+        Object.entries(this.interimResults).forEach(([key, value]) => {
+            const baseIndex = key.split('-')[0];
+            // Only keep the latest interim result for each base index
+            groupedResults[baseIndex] = value;
+        });
+        
+        const combinedInterim = Object.values(groupedResults).join(" ");
+        
+        if (combinedInterim.trim()) {
+            // Add as a final result without the "[finalized from interim]" marker
+            // to avoid cluttering the transcript
+            this.addFinalResult(combinedInterim.trim());
+            console.debug(`✅ Added interim text to final transcript: "${combinedInterim}"`);
+        }
+        
+        // Clear all interim results
+        this.interimResults = {};
+        return true;
+    }
+
+    // Remove the duplicate getFinalizedTranscript method that appears here
 }

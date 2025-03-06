@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Trans-Crab 🦀",
-  "version": "4.0",
+  "version": "4.4",
   "description": "Transcribe Google Meet and Zoom meetings",
   "permissions": [
     "activeTab",

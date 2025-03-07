@@ -218,3 +218,186 @@
   font-size: 0.9em;
   color: #666;
 }
+
+/* Add this to your existing CSS */
+.refresh-button {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 5px 10px;
+  margin: 10px 0;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.refresh-button:hover {
+  background-color: #e0e0e0;
+}
+
+.refresh-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.ai-status {
+  background-color: #f8f9fa;
+  border-left: 4px solid #17a2b8;
+  padding: 10px;
+  margin: 10px 0;
+  font-style: italic;
+}
+
+.loading-spinner {
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #3498db;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  animation: spin 1s linear infinite;
+  margin: 10px auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+/* Add these styles to your existing CSS */
+/* Updated button styles for a more high-tech look */
+.popup-actions {
+  display: flex;
+  gap: 12px;
+  margin: 15px 0;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.refresh-button, .delete-button {
+  width: 140px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: none;
+  height: 36px;
+  text-align: center;
+  margin: 0;
+  line-height: 1;
+  background: linear-gradient(to right, #4facfe, #00f2fe);
+  color: white;
+}
+
+.refresh-button:hover {
+  background: linear-gradient(to right, #00f2fe, #4facfe);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.delete-button {
+  background: linear-gradient(to right, #ff6b6b, #ff8e8e);
+  color: white;
+}
+
+.delete-button:hover {
+  background: linear-gradient(to right, #ff8e8e, #ff6b6b);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.refresh-button:disabled, .delete-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Updated confirmation dialog styles */
+.delete-confirm {
+  background: rgba(255, 107, 107, 0.1);
+  border: 1px solid rgba(255, 107, 107, 0.3);
+  border-radius: 8px;
+  padding: 16px;
+  margin: 15px 0;
+  color: #721c24;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.delete-confirm p {
+  margin: 0 0 15px 0;
+  font-weight: 600;
+}
+
+.delete-confirm-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.delete-confirm-yes, .delete-confirm-no {
+  min-width: 100px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.delete-confirm-yes {
+  background: linear-gradient(to right, #ff6b6b, #ff8e8e);
+  color: white;
+}
+
+.delete-confirm-no {
+  background: linear-gradient(to right, #e0e0e0, #f5f5f5);
+  color: #333;
+}
+
+.delete-confirm-yes:hover, .delete-confirm-no:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+/* Add the regenerate-button class */
+.regenerate-button {
+  width: 180px; /* Slightly wider to fit the text */
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: none;
+  height: 36px;
+  text-align: center;
+  margin: 0;
+  line-height: 1;
+  background: linear-gradient(to right, #4facfe, #00f2fe);
+  color: white;
+}
+
+.regenerate-button:hover {
+  background: linear-gradient(to right, #00f2fe, #4facfe);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.regenerate-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}

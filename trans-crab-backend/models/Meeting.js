@@ -37,6 +37,10 @@ const MeetingSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
+    isAIProcessed: {
+      type: Boolean,
+      default: false
+    },
   },
   {
     timestamps: true, // Automatically adds createdAt and updatedAt fields

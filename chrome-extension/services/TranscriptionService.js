@@ -71,6 +71,55 @@ export class TranscriptionService {
     }
 
     /**
+     * Forcefully stops the transcription service and cleans up resources.
+     * Ensures all event listeners are removed and interim results are saved.
+     */
+    async forceStop() {
+        console.debug("🛑 Force stopping transcription service...");
+        
+        this.isTranscribing = false; // Prevent auto-restart
+        
+        // First, finalize any interim results before stopping
+        if (this.transcriptController) {
+            // Ensure we finalize interim results BEFORE cleaning up recognition
+            if (typeof this.transcriptController.finalizeInterimResults === 'function') {
+                const hadInterim = this.transcriptController.finalizeInterimResults();
+                console.debug(hadInterim ? 
+                    "📝 Interim results finalized for final transcript" : 
+                    "ℹ️ No interim results to finalize");
+            } else {
+                // Fallback to just saving interim results
+                this.transcriptController.saveInterimResults(true);
+                console.debug("📝 Interim results saved (without finalization)");
+            }
+        }
+        
+        // Now clean up the recognition object
+        if (this.recognition) {
+            try {
+                // Remove all event listeners
+                this.recognition.onresult = null;
+                this.recognition.onerror = null;
+                this.recognition.onend = null;
+                
+                // Force stop the recognition
+                if (typeof this.recognition.abort === 'function') {
+                    await this.recognition.abort();
+                }
+                this.recognition.stop();
+            } catch (error) {
+                console.warn("⚠️ Error during recognition stop:", error);
+            } finally {
+                // Ensure cleanup happens regardless of errors
+                this.recognition = null;
+                console.debug("✅ Recognition service cleaned up");
+            }
+        }
+        
+        console.debug("📝 Final results processed");
+    }
+
+    /**
      * Stops the transcription process if active.
      * Saves any remaining interim results and resolves when recognition is fully stopped.
      */
@@ -105,39 +154,6 @@ export class TranscriptionService {
                 reject(err);
             }
         });
-    }
-
-    /**
-     * Forcefully stops the transcription service and cleans up resources.
-     * Ensures all event listeners are removed and interim results are saved.
-     */
-    async forceStop() {
-        console.debug("🛑 Force stopping transcription service...");
-        
-        this.isTranscribing = false; // Prevent auto-restart
-        
-        if (this.recognition) {
-            try {
-                // Remove all event listeners
-                this.recognition.onresult = null;
-                this.recognition.onerror = null;
-                this.recognition.onend = null;
-                
-                // Force stop the recognition
-                await this.recognition.abort();
-                this.recognition.stop();
-            } catch (error) {
-                console.warn("⚠️ Error during recognition stop:", error);
-            } finally {
-                // Ensure cleanup happens regardless of errors
-                this.recognition = null;
-                console.debug("✅ Recognition service cleaned up");
-            }
-        }
-        
-        // Save any remaining interim results
-        this.transcriptController.saveInterimResults();
-        console.debug("📝 Final results saved");
     }
 
     /**

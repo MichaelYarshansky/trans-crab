@@ -1,8 +1,8 @@
 import React from 'react';
 import './MeetingCard.css';
 
-function MeetingCard({ meeting, onCardClick }) {
-  const { meetingName, meetingDateTime, participants } = meeting;
+function MeetingCard({ meeting, onCardClick, onEditClick }) {
+  const { meetingName, meetingDateTime, participants, locallyModified } = meeting;
 
   const formatDateTime = (dateTime) => {
     const date = new Date(dateTime);
@@ -15,10 +15,25 @@ function MeetingCard({ meeting, onCardClick }) {
     return `${day}/${month}/${year} ${hours}:${minutes}`;
   };
 
+  const handleEditClick = (e) => {
+    e.stopPropagation(); // Prevent card click event from firing
+    onEditClick(meeting);
+  };
+
   return (
-    <div className="meeting-card" onClick={() => onCardClick(meeting)}>
+    <div className={`meeting-card ${locallyModified ? 'locally-modified' : ''}`} onClick={() => onCardClick(meeting)}>
       <div className="meeting-info">
-        <h3 className="meeting-title">{meetingName}</h3>
+        <h3 className="meeting-title">
+          {meetingName}
+          {locallyModified && <span className="modified-badge" title="Modified locally">*</span>}
+          <button 
+            className="edit-button" 
+            onClick={handleEditClick}
+            title="Edit meeting details"
+          >
+            ✏️
+          </button>
+        </h3>
         <p className="meeting-time">{formatDateTime(meetingDateTime)}</p>
         <div className="participants-info">
           <span className="participants-icon">👥</span>

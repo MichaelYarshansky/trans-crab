@@ -2,5 +2,8 @@
   "dependencies": {
     "mongoose": "^8.10.2",
     "react-calendar": "^5.1.0"
+  },
+  "devDependencies": {
+    "@babel/plugin-transform-react-jsx": "^7.25.9"
   }
 }

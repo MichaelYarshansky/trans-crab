@@ -30,6 +30,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     const { payload } = message;
     console.debug("📩 [background.js] Received payload:", payload);
 
+    // Make sure we're only using finalized transcript content
+    const finalTranscript = payload.transcript.replace(/\[interim\]/g, '');
+
     // Example: local dev server
     const SERVER_URL = "http://localhost:5001/api/transcriptions";
 
@@ -39,7 +42,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        transcript: payload.transcript,
+        transcript: finalTranscript,
         meetingName: payload.meetingName,
         meetingDateTime: payload.meetingDateTime,
         participants: payload.participants,

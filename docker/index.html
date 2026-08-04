@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trans-Crab 🦀 — Meeting Transcription for Chrome</title>
+    <style>
+      :root {
+        --bg: #12100f;
+        --card: #1d1a18;
+        --line: #322c29;
+        --text: #f2ede9;
+        --muted: #a89e98;
+        --crab: #e8563f;
+        --crab-dim: #b83f2c;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.6;
+        display: flex;
+        justify-content: center;
+        padding: 3rem 1.25rem;
+      }
+      main { width: 100%; max-width: 46rem; }
+      header { text-align: center; margin-bottom: 2.5rem; }
+      .icon { width: 88px; height: 88px; border-radius: 20px; }
+      h1 { font-size: 2.1rem; margin: 1rem 0 0.35rem; letter-spacing: -0.02em; }
+      .tagline { color: var(--muted); margin: 0; font-size: 1.05rem; }
+      .badge {
+        display: inline-block;
+        margin-top: 1rem;
+        padding: 0.2rem 0.7rem;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        color: var(--muted);
+        font-size: 0.8rem;
+        font-variant-numeric: tabular-nums;
+      }
+      .cta { text-align: center; margin: 2.5rem 0; }
+      .download {
+        display: inline-block;
+        background: var(--crab);
+        color: #fff;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 1.05rem;
+        padding: 0.85rem 2rem;
+        border-radius: 10px;
+        transition: background 0.15s ease;
+      }
+      .download:hover { background: var(--crab-dim); }
+      .cta small { display: block; margin-top: 0.7rem; color: var(--muted); }
+      section {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 1.5rem 1.75rem;
+        margin-bottom: 1.25rem;
+      }
+      h2 { font-size: 1.05rem; margin: 0 0 0.9rem; letter-spacing: 0.01em; }
+      ul, ol { margin: 0; padding-left: 1.3rem; }
+      li { margin-bottom: 0.45rem; }
+      li:last-child { margin-bottom: 0; }
+      code {
+        background: #0d0b0a;
+        border: 1px solid var(--line);
+        border-radius: 5px;
+        padding: 0.1rem 0.4rem;
+        font-size: 0.88em;
+      }
+      footer {
+        text-align: center;
+        color: var(--muted);
+        font-size: 0.85rem;
+        margin-top: 2rem;
+      }
+      footer a { color: var(--muted); }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <img src="crab-icon16.png" alt="Trans-Crab" class="icon" />
+        <h1>Trans-Crab 🦀</h1>
+        <p class="tagline">Transcribes your Google Meet and Zoom calls, then saves the text as a file.</p>
+        <span class="badge">version __VERSION__</span>
+      </header>
+
+      <div class="cta">
+        <a class="download" href="trans-crab.zip" download>Download extension (.zip)</a>
+        <small>Unpacked Chrome extension &middot; Manifest V3</small>
+      </div>
+
+      <section>
+        <h2>Features</h2>
+        <ul>
+          <li>Real-time speech-to-text, with Hebrew support</li>
+          <li>Works on both Google Meet and Zoom</li>
+          <li>Single-button operation to start and stop</li>
+          <li>Synchronized timer reflecting true recording duration</li>
+          <li>Transcript downloads automatically as a text file</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Install</h2>
+        <ol>
+          <li>Download and unzip the archive above.</li>
+          <li>Open <code>chrome://extensions/</code> and enable <strong>Developer mode</strong>.</li>
+          <li>Click <strong>Load unpacked</strong> and select the unzipped folder.</li>
+          <li>Pin Trans-Crab from the 🧩 puzzle icon in your toolbar.</li>
+        </ol>
+      </section>
+
+      <section>
+        <h2>Use</h2>
+        <ol>
+          <li>Join a Google Meet or Zoom call in your browser.</li>
+          <li>Click the Trans-Crab 🦀 icon in the toolbar.</li>
+          <li>Hit <strong>Start Transcribing</strong> — the timer begins.</li>
+          <li>Hit stop when done; the transcript downloads as <code>.txt</code>.</li>
+        </ol>
+      </section>
+
+      <footer>
+        Built and published to Artifactory by CI &middot;
+        <a href="https://github.com/MichaelYarshansky/trans-crab">github.com/MichaelYarshansky/trans-crab</a>
+      </footer>
+    </main>
+  </body>
+</html>
